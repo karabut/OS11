@@ -8,17 +8,20 @@
 extern char** environ;
 
 int execvpe(char* file, char* argv[], char* envp[]) {
+
     if(file == NULL) {
         perror("NULL pointer to file");
         return EXIT_FAILURE;
     }
-    char** savedEnviron = environ;
+
+    char** Environ = environ;
 
     if (execvp(file, argv) == ERROR){
-        environ = savedEnviron;
-        perror("exec error");
+        environ = Environ;
+        perror("error in exec");
         return EXIT_FAILURE;
     }
+
 }
 
 int main(int argc, char* argv[], char* envp[]) {

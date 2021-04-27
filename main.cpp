@@ -13,9 +13,8 @@ int execvpe(char* file, char* const argv[], char* envp[])
     //меняем на переданный нами адрес массива указателей
     environ = envp;
     //вызываем функцию execvp
-    if(execvp(file, argv) == ERROR){
-        perror("error in execvp");
-    }
+    execvp(file, argv);
+    perror("error in execvp");
     //возвращаем старый адрес массива указателей
     environ = prevEnv;
     return ERROR;

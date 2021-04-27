@@ -25,7 +25,7 @@ int execvpe(char* file, char* const argv[], char* envp[])
 int main(int argc, char *argv[])
 {
     char *newArgv[2] = {"prog.out", (char *) 0};
-    char *newEnvp[4] = {"PATH=/home/students/19200/e.karabut2/lab11", (char *) 0};
+    char *newEnvp[2] = {"PATH=/home/students/19200/e.karabut2/lab11", (char *) 0};
     execvpe(newArgv[0], newArgv, newEnvp);
 
     EXIT_FAILURE;

@@ -1,53 +1,31 @@
-#include <unistd.h>
-#include <stdlib.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
 
-#define PUTENV_SUCCESS 0
 #define ERROR -1
 
-extern char** environ;
+extern char **environ;
 
-int execvpe(char* file, char* argv[], char* envp[]) {
-
-    if(file == NULL) {
-        perror("NULL pointer to file");
-        return EXIT_FAILURE;
+int execvpe(char* file, char* const argv[], char* envp[])
+{
+    //сохраняем старый адрес массива указателей
+    char **prevEnv = environ;
+    //меняем на переданный нами адрес массива указателей
+    environ = envp;
+    //вызываем функцию execvp
+    if(execvp(file, argv) == ERROR){
+        perror("error in execvp");
     }
-
-    char** Environ = environ;
-
-    if (execvp(file, argv) == ERROR){
-        environ = Environ;
-        perror("error in exec");
-        return EXIT_FAILURE;
-    }
-
+    //возвращаем старый адрес массива указателей
+    environ = prevEnv;
+    return ERROR;
 }
 
-int main(int argc, char* argv[], char* envp[]) {
+int main(int argc, char *argv[])
+{
+    char *newArgv[2] = {"prog.out", (char *) 0};
+    char *newEnvp[4] = {"RANDOM_VAR1=operating", "RANDOM_VAR2=system", "PATH=/home/students/19200/e.karabut2/lab11", (char *) 0};
+    execvpe(newArgv[0], newArgv, newEnvp);
 
-    //если общее количество аргументов меньше 2
-    if(argc < 2) {
-        printf("Need two or more args \n");
-        return EXIT_FAILURE;
-    }
-
-    if(envp == NULL) {
-        perror("Environment has not been set");
-    }
-
-    /*Функция putenv принимает строку в формате name=value и помещает ее в список переменных окружения.*/
-    if(putenv("TEST=lab11") != PUTENV_SUCCESS){
-
-        perror("error in putenv");
-
-        return EXIT_FAILURE;
-
-    }
-
-    execvpe(argv[1], &argv[1], envp);
-
-    perror("exec error");
-
-    return EXIT_FAILURE;
+    EXIT_FAILURE;
 }
